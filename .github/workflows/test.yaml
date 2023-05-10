@@ -12,31 +12,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Checkout git submodules
-      run: |
-        git submodule update --init --depth 10
-        ./qemu/scripts/git-submodule.sh update  ui/keycodemapdb tests/fp/berkeley-testfloat-3 tests/fp/berkeley-softfloat-3 dtc roms/SLOF
     - name: Install Ubuntu packages
       run: |
         sudo apt update
-        sudo apt install -qq libelf-dev binutils-powerpc64le-linux-gnu gcc-powerpc64le-linux-gnu bison flex tar make gzip cmake python3
+        sudo apt install -qq libelf-dev binutils-powerpc64le-linux-gnu gcc-powerpc64le-linux-gnu bison flex tar make gzip cmake python3 python3-pexpect device-tree-compiler libpixman-1-0 libgio-qt0
+
+      # Do the build
+    - name: Checkout git submodules
+      if: github.ref_name != 'test'
+      run: |
+        git submodule update --init --depth 10
+        ./qemu/scripts/git-submodule.sh update  ui/keycodemapdb tests/fp/berkeley-testfloat-3 tests/fp/berkeley-softfloat-3 dtc roms/SLOF
     - name: defconfig
+      if: github.ref_name != 'test'
       run: |
         ./make kvm_l1_defconfig
         ./buildroot/utils/config --file output/.config -e BR2_TOOLCHAIN_EXTERNAL
         ./make olddefconfig
     - name: Build
+      if: github.ref_name != 'test'
       run: ./make -j $(nproc)
+    - name: Pack artifacts
+      if: github.ref_name != 'test'
+      run: tar -cvf artifacts.tar output/images output/build/host-qemu-custom
+    - name: Upload build artifact
+      if: github.ref_name != 'test'
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: artifacts.tar
+
+    # Download build artifact (rather than building)
+    - name: Download build artifacts
+      if: github.ref_name == 'test'
+      continue-on-error: true
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        branch: build # FIXME change to main?
+    - name: Unpack artifacts
+      if: github.ref_name == 'test'
+      run: tar xvf build/artifacts.tar
+
+    # Run the test
     - name: Test
       run: ./test_L1.sh
-
-    - name: Kernel artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: vmlinux
-        path: output/images/vmlinux
-    - name: Rootfs artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: rootfs.cpio
-        path: output/images/rootfs.cpio
