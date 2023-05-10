@@ -13,13 +13,18 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Checkout git submodules
-      run: git submodule update --init --recursive --depth 10
+      run: |
+        git submodule update --init --depth 10
+        ./qemu/scripts/git-submodule.sh update  ui/keycodemapdb tests/fp/berkeley-testfloat-3 tests/fp/berkeley-softfloat-3 dtc roms/SLOF
     - name: Install Ubuntu packages
       run: |
         sudo apt update
-        sudo apt install -y libelf-dev binutils-powerpc64le-linux-gnu gcc-powerpc64le-linux-gnu
+        sudo apt install -qq libelf-dev binutils-powerpc64le-linux-gnu gcc-powerpc64le-linux-gnu bison flex tar make gzip cmake python3
     - name: defconfig
-      run: ./make kvm_l1_defconfig
+      run: |
+        ./make kvm_l1_defconfig
+        ./buildroot/utils/config --file output/.config -e BR2_TOOLCHAIN_EXTERNAL
+        ./make olddefconfig
     - name: Build
       run: ./make -j $(nproc)
     - name: Test
