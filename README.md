@@ -11,26 +11,26 @@ Usage
 **Building everything**
 
 1. `git submodule update --init --recursive --depth 10`
-2. `./make kvm_l1_defconfig`
-3. `./make`
+2. `make kvm_l1_defconfig`
+3. `make`
 
 This will take a long time the first time you do it, then it'll be fine.
 
 **Rebuilding the kernel**
 
-`./make linux-rebuild`
+`make linux-rebuild`
 
-Note that if modules are affected by your rebuilt kernel then you'll need to run `./make` again.
+Note that if modules are affected by your rebuilt kernel then you'll need to run `make` again.
 
 **Rebuilding the L0 qemu**
 
-`./make host-qemu-rebuild`
+`make host-qemu-rebuild`
 
 **Rebuilding the L1 qemu**
 
-`./make qemu-l1-rebuild`
+`make qemu-l1-rebuild`
 
-The L1 qemu binary will be in `/root`, but it won't be in `/usr/bin` without a `./make`.
+The L1 qemu binary will be in `/root`, but it won't be in `/usr/bin` without a `make`.
 
 **Running**
 
@@ -48,19 +48,19 @@ Development workflow
 **L0 qemu**
 
 1. Make your qemu changes
-2. `./make host-qemu-rebuild`
+2. `make host-qemu-rebuild`
 3. `./run_L1.sh`
 
 **L1 kernel**
 
 1. Make your kernel changes
-2. `./make linux-rebuild` (and optionally `./make` if necessary for modules)
+2. `make linux-rebuild` (and optionally `make` if necessary for modules)
 3. `./run_L1.sh`
 
 **L1 qemu**
 
 1. Make your qemu changes
-2. `./make qemu-l1-rebuild`
+2. `make qemu-l1-rebuild`
 3. `./run_L1.sh` (or, if you already have the L1 running, `scripts/copy_qemu.sh`)
 
 Adding tests
@@ -71,7 +71,7 @@ Anything in `overlay/` will be in `/root` in the L1 and L2 guests, so put anythi
 Adding things to the guest image
 --------------------------------
 
-Any desired packages for the guest image should be added to `kvm-on-powervm/configs/kvm_l1_defconfig`.  You'll want to run `./make kvm_l1_defconfig && ./make` after any changes.
+Any desired packages for the guest image should be added to `kvm-on-powervm/configs/kvm_l1_defconfig`.  You'll want to run `make kvm_l1_defconfig && make` after any changes.
 
 Troubleshooting/suggestions
 ---------------------------

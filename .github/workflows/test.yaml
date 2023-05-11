@@ -26,12 +26,12 @@ jobs:
     - name: defconfig
       if: github.ref_name != 'test'
       run: |
-        ./make kvm_l1_defconfig
+        make kvm_l1_defconfig
         ./buildroot/utils/config --file output/.config -e BR2_TOOLCHAIN_EXTERNAL
-        ./make olddefconfig
+        make olddefconfig
     - name: Build
       if: github.ref_name != 'test'
-      run: ./make -j $(nproc)
+      run: make -j $(nproc)
     - name: Pack artifacts
       if: github.ref_name != 'test'
       run: |
