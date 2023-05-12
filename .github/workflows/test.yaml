@@ -12,6 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+
+    - name: Caching
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-buildroot-output
+      with:
+        path: output/build
+        key: ${{ runner.os }}-build-${{ env.cache-name }}
+
     - name: Install Ubuntu packages
       run: |
         sudo apt update
