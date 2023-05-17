@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -36,11 +36,45 @@ jobs:
         make olddefconfig
     - name: Build
       run: make -j $(nproc)
-
-    # Run the test
-    - name: Test HV (v1) API 
-      run: ./test_L1.sh --v1
-
-    - name: Test PAPR (v2) API
-      run: ./test_L1.sh --v2
+    - name: Pack artifacts
+      run: |
+         scripts/copy_qemu.sh
+         scripts/copy_images.sh
+         tar -cvf artifacts.tar output/images output/build/host-qemu-custom overlay/qemu-system-ppc64 overlay/rootfs.cpio overlay/slof.bin overlay/vmlinux
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
+        path: artifacts.tar
+        retention-days: 2 # short since it's only to be reused below
+  test:
+    needs: build
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        api: [
+          "v1",
+          "v2",
+        ]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+    - name: Install Ubuntu packages
+      run: |
+        sudo apt update
+        sudo apt install -qq libelf-dev binutils-powerpc64le-linux-gnu gcc-powerpc64le-linux-gnu bison flex tar make gzip cmake python3 python3-pexpect device-tree-compiler libpixman-1-0 libgio-qt0
+    - uses: actions/download-artifact@v3
+      with:
+        name: build-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
+    - name: Find
+      run: find .
+    - name: Unpack artifacts
+      run: tar xvf artifacts.tar
+    - name: Find
+      run: find .
+    - name: Test ${{ matrix.api }} API
+      run: ./test_L1.sh --${{ matrix.api }}
 
