@@ -38,5 +38,9 @@ jobs:
       run: make -j $(nproc)
 
     # Run the test
-    - name: Test
-      run: ./test_L1.sh
+    - name: Test HV (v1) API 
+      run: ./test_L1.sh --v1
+
+    - name: Test PAPR (v2) API
+      run: ./test_L1.sh --v2
+
