@@ -4,9 +4,16 @@ import pexpect
 import getopt
 import sys
 
-args = sys.argv[1:]
+runopts=""
 
-child = pexpect.spawn ('./run_L1.sh')
+opts, args = getopt.getopt(sys.argv[1:], '12', ['v1', 'v2'])
+for o, v in opts:
+	if o in ('-1', '--v1'):
+		runopts = "--v1"
+	if o in ('-2', '--v2'):
+		runopts = "--v2"
+
+child = pexpect.spawn ('./run_L1.sh %s' % runopts)
 #child.logfile = open("/tmp/mylog", "w")
 child.logfile = sys.stdout.buffer
 
