@@ -37,7 +37,7 @@ jobs:
       run: |
          scripts/copy_qemu.sh
          scripts/copy_images.sh
-         tar -cvf artifacts.tar output/images output/build/host-qemu-custom overlay/qemu-system-ppc64 overlay/rootfs.cpio overlay/slof.bin overlay/vmlinux
+         tar -cvf artifacts.tar overlay/qemu-system-ppc64 overlay/rootfs.cpio overlay/slof.bin overlay/vmlinux output/build/host-qemu-custom/build/qemu-system-ppc64
     - name: Upload build artifact
       uses: actions/upload-artifact@v3
       with:
