@@ -6,6 +6,7 @@ scripts/copy_images.sh
 N=$(nproc)
 
 TYPE=papr
+CPU=POWER10
 
 while [ "$1"x != "x" ] ; do
     case $1 in
@@ -14,6 +15,12 @@ while [ "$1"x != "x" ] ; do
 	;;
     --v2)
 	TYPE=papr
+	;;
+    --p9)
+	CPU=POWER9
+	;;
+    --p10)
+	CPU=POWER10
 	;;
     *)
 	echo "ERROR: Invalid option: $1" >&2
@@ -26,7 +33,7 @@ done
 
 
 output/build/host-qemu-custom/build/qemu-system-ppc64 -nographic \
-  -machine pseries,cap-nested-${TYPE}=true -cpu POWER10 \
+  -machine pseries,cap-nested-${TYPE}=true -cpu ${CPU} \
   -display none -vga none -m 4G -accel tcg,thread=multi \
   -serial mon:stdio \
   -smp cores=$N,maxcpus=$N,threads=1 \
