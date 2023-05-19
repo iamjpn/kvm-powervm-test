@@ -66,12 +66,8 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: build-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}
-    - name: Find
-      run: find .
     - name: Unpack artifacts
       run: tar xvf artifacts.tar
-    - name: Find
-      run: find .
     - name: Test ${{ matrix.api }} API
       run: ./test_L1.sh --${{ matrix.api }}
 
