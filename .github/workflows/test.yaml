@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-
+      with:
+        submodules: recursive
     - name: Load ccache
       uses: actions/cache@v3
       with:
@@ -25,10 +26,6 @@ jobs:
         sudo apt update
         sudo apt install -qq libelf-dev binutils-powerpc64le-linux-gnu gcc-powerpc64le-linux-gnu bison flex tar make gzip cmake python3 python3-pexpect device-tree-compiler libpixman-1-0 libgio-qt0
 
-    - name: Checkout git submodules
-      run: |
-        git submodule update --init --depth 10
-        ./qemu/scripts/git-submodule.sh update  ui/keycodemapdb tests/fp/berkeley-testfloat-3 tests/fp/berkeley-softfloat-3 dtc roms/SLOF
     - name: Configure
       run: |
         make kvm_l1_defconfig
