@@ -32,4 +32,5 @@ output/build/host-qemu-custom/build/qemu-system-ppc64 -nographic \
   -smp cores=$N,maxcpus=$N,threads=1 \
   -kernel overlay/vmlinux \
   -initrd overlay/rootfs.cpio \
+  -bios overlay/slof.bin \
   -virtfs local,path=overlay,mount_tag=host0,security_model=mapped-xattr,id=host0
