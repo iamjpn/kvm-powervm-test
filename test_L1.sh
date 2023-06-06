@@ -48,8 +48,6 @@ child.sendline ('./run_all_L2.sh 2')
 child.expect ('# ')
 child.sendline ('./check_all_L2.sh 2')
 child.expect ('# ', timeout=600)
-child.sendline ('pkill qemu-system-ppc -9; sleep 5')
-child.expect ('# ', timeout=300)
 
 child.sendline ('halt -f')
 child.expect('System halted')
