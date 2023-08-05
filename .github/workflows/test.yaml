@@ -1,6 +1,7 @@
 name: Build and test L2s
 
 on:
+  workflow_dispatch:
   push:
   pull_request:
   schedule:
