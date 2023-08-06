@@ -6,4 +6,4 @@
 	url = https://github.com/planetharsh/qemu
 [submodule "linux"]
 	path = linux
-	url = https://github.com/mikey/linux
+	url = https://github.com/iamjpn/linux
