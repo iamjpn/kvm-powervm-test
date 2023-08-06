@@ -20,7 +20,7 @@ QEMU_L1_CPE_ID_VENDOR = qemu
 # However, building is still done with configure and make as in previous versions of QEMU_L1.
 
 # Target-qemu
-QEMU_L1_DEPENDENCIES = host-meson host-pkgconf libglib2 zlib pixman host-python3
+QEMU_L1_DEPENDENCIES = host-pkgconf libglib2 zlib pixman host-python3
 
 # Need the LIBS variable because librt and libm are
 # not automatically pulled. :-(
