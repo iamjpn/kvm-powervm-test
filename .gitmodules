@@ -1,6 +1,6 @@
 [submodule "buildroot"]
 	path = buildroot
-	url = https://github.com/mikey/buildroot
+	url = https://github.com/iamjpn/buildroot
 [submodule "qemu"]
 	path = qemu
 	url = https://github.com/planetharsh/qemu
