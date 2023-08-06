@@ -226,7 +226,6 @@ define QEMU_L1_CONFIGURE_CMDS
 			--enable-vhost-net \
 			--enable-virtfs \
 			--enable-cap-ng \
-			--with-git-submodules=ignore \
 			$(QEMU_L1_OPTS)
 endef
 
